@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Supabase Login & Signin',
-  description: 'Next.js app with Supabase authentication',
+  title: 'Sign Up',
+  description: 'Sign up page',
 }
 
 export default function RootLayout({
@@ -17,4 +17,3 @@ export default function RootLayout({
     </html>
   )
 }
-
