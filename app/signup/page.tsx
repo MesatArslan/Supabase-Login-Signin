@@ -252,7 +252,7 @@ export default function SignUpPage() {
             <p className="text-sm text-gray-600">
               Zaten hesabınız var mı?{' '}
               <a
-                href="/login"
+                href="/signin"
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 Giriş Yap
