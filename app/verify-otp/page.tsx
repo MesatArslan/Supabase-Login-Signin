@@ -58,7 +58,7 @@ export default function VerifyOtpPage() {
     // Başarılı!
     setSuccess(true)
     setTimeout(() => {
-      router.push('/dashboard')
+      router.push('/admin')
     }, 1500)
   }
 
