@@ -78,23 +78,30 @@ export async function verifyOtpAndSignup(
       }
     }
 
-    // OTP doğrulandı, şimdi şifreyi güncelle
+    // OTP doğrulandı, şimdi signUp ile kullanıcıyı kaydet
     if (verifyData.user) {
-      // Şifreyi güncelle
-      const { error: updateError } = await supabase.auth.updateUser({
+      const { data, error } = await supabase.auth.signUp({
+        email: updatePasswordDto.email,
         password: updatePasswordDto.password,
+        // DÜZELTME BURADA:
+        options: {
+          data: {
+            full_name: updatePasswordDto.fullName,
+            profession: updatePasswordDto.profession,
+          }
+        }
       })
 
-      if (updateError) {
+      if (error) {
         return {
           success: false,
-          error: updateError.message,
+          error: error.message,
         }
       }
 
       return {
         success: true,
-        user: verifyData.user,
+        user: data.user,
       }
     }
 

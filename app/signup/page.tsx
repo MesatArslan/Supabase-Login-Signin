@@ -3,10 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { sendOtp, verifyOtpAndSignup } from '@/lib/services/signup_service'
-import { SendOtpDto, VerifyOtpDto, UpdatePasswordDto } from '@/lib/dto/signup-dto'
+import { SendOtpDto, VerifyOtpDto, UpdatePasswordDto, ProfessionType } from '@/lib/dto/signup-dto'
+import { PROFESSION_OPTIONS } from '@/lib/constants/User'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [profession, setProfession] = useState<ProfessionType | ''>('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [otp, setOtp] = useState('')
@@ -25,7 +28,7 @@ export default function SignUpPage() {
     setSuccess(false)
 
     // Validation
-    if (!email || !password || !confirmPassword) {
+    if (!email || !fullName || !profession || !password || !confirmPassword) {
       setError('Lütfen tüm alanları doldurun')
       return
     }
@@ -44,6 +47,8 @@ export default function SignUpPage() {
 
     const sendOtpDto: SendOtpDto = {
       email,
+      fullName,
+      profession: profession as ProfessionType,
     }
 
     const result = await sendOtp(sendOtpDto)
@@ -80,7 +85,10 @@ export default function SignUpPage() {
     }
 
     const updatePasswordDto: UpdatePasswordDto = {
+      email,
       password,
+      fullName,
+      profession: profession as ProfessionType,
     }
 
     const result = await verifyOtpAndSignup(verifyOtpDto, updatePasswordDto)
@@ -127,7 +135,7 @@ export default function SignUpPage() {
 
 
           {!showOtpForm ? (
-            // İlk Form: Email, Şifre, Şifre Tekrar
+            // İlk Form: Email, İsim, Meslek, Şifre, Şifre Tekrar
             <form onSubmit={handleSendOtp} className="space-y-6">
               <div>
                 <label
@@ -146,6 +154,49 @@ export default function SignUpPage() {
                   required
                   disabled={loading}
                 />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  İsim Soyisim
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Adınız ve soyadınız"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="profession"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Meslek
+                </label>
+                <select
+                  id="profession"
+                  value={profession}
+                  onChange={(e) => setProfession(e.target.value as ProfessionType)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  required
+                  disabled={loading}
+                >
+                  <option value="">Meslek seçiniz</option>
+                  {PROFESSION_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
